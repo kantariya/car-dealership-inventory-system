@@ -1,0 +1,87 @@
+# ============================
+# OS Files
+# ============================
+.DS_Store
+Thumbs.db
+
+# ============================
+# IDEs
+# ============================
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# ============================
+# Logs
+# ============================
+*.log
+logs/
+
+# ============================
+# Environment Files
+# ============================
+.env
+.env.*
+!.env.example
+
+# ============================
+# Root Project Files
+# ============================
+project_instruction
+project_instruction.*
+*.local
+
+# ============================
+# Spring Boot (Backend)
+# ============================
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Generated files
+backend/out/
+backend/bin/
+
+# Spring Boot DevTools
+backend/.classpath
+backend/.project
+backend/.settings/
+
+# Temporary files
+backend/*.tmp
+
+# ============================
+# Frontend (React + Vite)
+# ============================
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+
+# npm/yarn/pnpm logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+# ============================
+# Test Reports
+# ============================
+coverage/
+test-results/
+
+# ============================
+# Build Artifacts
+# ============================
+build/
+dist/
+out/
+
+# ============================
+# Miscellaneous
+# ============================
+*.swp
+*.swo
+*.bak
+*.orig
