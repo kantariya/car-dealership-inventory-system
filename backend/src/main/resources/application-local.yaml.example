@@ -1,0 +1,8 @@
+# Copy this file to application-local.yaml to override configuration values locally.
+# application-local.yaml is gitignored and will not be committed to Git.
+
+spring:
+  datasource:
+    url: your_database_url
+    username: your_database_username
+    password: your_database_password
