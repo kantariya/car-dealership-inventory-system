@@ -1,0 +1,8 @@
+CREATE TABLE vehicles (
+    id BIGSERIAL PRIMARY KEY,
+    make VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    price NUMERIC(38, 2) NOT NULL,
+    quantity INTEGER NOT NULL
+);
