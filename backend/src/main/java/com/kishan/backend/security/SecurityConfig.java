@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpMethod;
 
 /**
  * Main Spring Security configuration class to secure endpoints and define stateless session behavior.
@@ -31,9 +32,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 // Allow public access to specific test-only endpoints used in other global exception tests
                 .requestMatchers("/test/validation", "/test/generic-exception", "/test/not-found-exception").permitAll()
-                // Restrict vehicle creation and updating to ADMIN role
-                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/vehicles").hasRole("ADMIN")
-                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/vehicles/**").hasRole("ADMIN")
+                // Restrict vehicle modification to ADMIN role
+                .requestMatchers(HttpMethod.POST, "/api/vehicles").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/vehicles/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/vehicles/**").hasRole("ADMIN")
                 // All other endpoints require authentication
                 .anyRequest().authenticated()
             )

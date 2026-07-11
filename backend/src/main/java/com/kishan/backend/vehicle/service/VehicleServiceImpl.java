@@ -63,8 +63,11 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    @Transactional
     public void deleteVehicle(Long id) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"));
+        vehicleRepository.delete(vehicle);
     }
 
     private void updateVehicleFields(Vehicle vehicle, com.kishan.backend.vehicle.dto.UpdateVehicleRequest request) {
