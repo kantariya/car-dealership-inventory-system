@@ -7,6 +7,7 @@ import com.kishan.backend.vehicle.repository.VehicleRepository;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service implementation for vehicle operations.
@@ -50,8 +51,23 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    @Transactional
     public VehicleResponse updateVehicle(Long id, com.kishan.backend.vehicle.dto.UpdateVehicleRequest request) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"));
+
+        updateVehicleFields(vehicle, request);
+
+        Vehicle updatedVehicle = vehicleRepository.save(vehicle);
+        return mapToResponse(updatedVehicle);
+    }
+
+    private void updateVehicleFields(Vehicle vehicle, com.kishan.backend.vehicle.dto.UpdateVehicleRequest request) {
+        vehicle.setMake(request.make());
+        vehicle.setModel(request.model());
+        vehicle.setCategory(request.category());
+        vehicle.setPrice(request.price());
+        vehicle.setQuantity(request.quantity());
     }
 
     private org.springframework.data.jpa.domain.Specification<Vehicle> buildSearchSpecification(
