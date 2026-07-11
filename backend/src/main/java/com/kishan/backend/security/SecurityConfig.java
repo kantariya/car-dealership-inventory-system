@@ -9,8 +9,13 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Main Spring Security configuration class to secure endpoints and define stateless session behavior.
@@ -26,6 +31,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter jwtAuthFilter = new JwtAuthenticationFilter(jwtService);
         http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                 // Allow public access to authentication endpoints
@@ -51,5 +57,26 @@ public class SecurityConfig {
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        String frontendUrl = System.getenv("FRONTEND_URL");
+        List<String> allowedOrigins = new ArrayList<>();
+        allowedOrigins.add("http://localhost:5173"); // Vite React
+        allowedOrigins.add("http://localhost:3000"); // Create React App
+        if (frontendUrl != null && !frontendUrl.isBlank()) {
+            allowedOrigins.add(frontendUrl);
+        }
+        configuration.setAllowedOrigins(allowedOrigins);
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control", "Accept", "X-Requested-With"));
+        configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
