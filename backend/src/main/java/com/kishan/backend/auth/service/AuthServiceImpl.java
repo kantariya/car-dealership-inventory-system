@@ -69,6 +69,10 @@ public class AuthServiceImpl implements AuthService {
         // We will implement real JWT generation in the next step!
         String token = "stub-jwt-token";
 
+        return mapToLoginResponse(user, token);
+    }
+
+    private LoginResponse mapToLoginResponse(User user, String token) {
         return new LoginResponse(
                 token,
                 user.getEmail(),
