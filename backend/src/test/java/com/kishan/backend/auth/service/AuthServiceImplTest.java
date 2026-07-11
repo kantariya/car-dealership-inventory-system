@@ -8,6 +8,7 @@ import com.kishan.backend.auth.entity.Role;
 import com.kishan.backend.auth.entity.User;
 import com.kishan.backend.auth.exception.EmailAlreadyExistsException;
 import com.kishan.backend.auth.repository.UserRepository;
+import com.kishan.backend.security.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,9 @@ class AuthServiceImplTest {
 
     @Spy
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Mock
+    private JwtService jwtService;
 
     @InjectMocks
     private AuthServiceImpl authService;
@@ -108,6 +112,7 @@ class AuthServiceImplTest {
                 .build();
         
         when(userRepository.findByEmail(loginRequest.email())).thenReturn(java.util.Optional.of(user));
+        when(jwtService.generateToken("john.doe@example.com", "USER")).thenReturn("stub-jwt-token");
 
         // Act
         LoginResponse response = authService.login(loginRequest);

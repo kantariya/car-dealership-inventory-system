@@ -1,7 +1,17 @@
 package com.kishan.backend.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Service class responsible for generating, extracting, and validating JSON Web Tokens (JWT).
@@ -20,6 +30,16 @@ public class JwtService {
     }
 
     /**
+     * Obtains the signing key for JWT signature verification.
+     *
+     * @return the HMAC-SHA signing key
+     */
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    /**
      * Generates a JWT token for the specified user email and role.
      *
      * @param email the user email
@@ -27,7 +47,42 @@ public class JwtService {
      * @return the generated JWT token string
      */
     public String generateToken(String email, String role) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
+        return Jwts.builder()
+                .claims(claims)
+                .subject(email)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    /**
+     * Parses the JWT token to extract all claims.
+     *
+     * @param token the JWT token
+     * @return all claims in the token
+     */
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    /**
+     * Helper method to extract a specific claim using a claims resolver function.
+     *
+     * @param token          the JWT token
+     * @param claimsResolver the function to resolve claims
+     * @param <T>            the type of the claim
+     * @return the resolved claim
+     */
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
     /**
@@ -37,7 +92,7 @@ public class JwtService {
      * @return the extracted email
      */
     public String extractEmail(String token) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return extractClaim(token, Claims::getSubject);
     }
 
     /**
@@ -47,7 +102,27 @@ public class JwtService {
      * @return the extracted role
      */
     public String extractRole(String token) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return extractClaim(token, claims -> claims.get("role", String.class));
+    }
+
+    /**
+     * Extracts the expiration date from the JWT token.
+     *
+     * @param token the JWT token
+     * @return the expiration date
+     */
+    private Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    /**
+     * Checks if the JWT token has expired.
+     *
+     * @param token the JWT token
+     * @return true if expired, false otherwise
+     */
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
     }
 
     /**
@@ -58,6 +133,11 @@ public class JwtService {
      * @return true if valid, false otherwise
      */
     public boolean validateToken(String token, String email) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        try {
+            final String extractedEmail = extractEmail(token);
+            return (extractedEmail.equals(email) && !isTokenExpired(token));
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

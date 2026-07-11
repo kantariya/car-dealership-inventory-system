@@ -8,6 +8,7 @@ import com.kishan.backend.auth.entity.Role;
 import com.kishan.backend.auth.entity.User;
 import com.kishan.backend.auth.exception.EmailAlreadyExistsException;
 import com.kishan.backend.auth.repository.UserRepository;
+import com.kishan.backend.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,6 +23,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     /**
      * Registers a new user.
@@ -65,9 +67,8 @@ public class AuthServiceImpl implements AuthService {
             throw new BadCredentialsException("Invalid email or password");
         }
 
-        // Return token and user details. For now, we return a stub token.
-        // We will implement real JWT generation in the next step!
-        String token = "stub-jwt-token";
+        // Generate real JWT token
+        String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
 
         return mapToLoginResponse(user, token);
     }
