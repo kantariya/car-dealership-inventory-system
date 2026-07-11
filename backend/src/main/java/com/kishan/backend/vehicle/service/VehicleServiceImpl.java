@@ -42,7 +42,35 @@ public class VehicleServiceImpl implements VehicleService {
             BigDecimal minPrice,
             BigDecimal maxPrice
     ) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        org.springframework.data.jpa.domain.Specification<Vehicle> spec = buildSearchSpecification(make, model, category, minPrice, maxPrice);
+
+        return vehicleRepository.findAll(spec).stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    private org.springframework.data.jpa.domain.Specification<Vehicle> buildSearchSpecification(
+            String make, String model, String category, BigDecimal minPrice, BigDecimal maxPrice
+    ) {
+        org.springframework.data.jpa.domain.Specification<Vehicle> spec = org.springframework.data.jpa.domain.Specification.where(null);
+
+        if (make != null && !make.isBlank()) {
+            spec = spec.and((root, query, cb) -> cb.equal(cb.lower(root.get("make")), make.toLowerCase()));
+        }
+        if (model != null && !model.isBlank()) {
+            spec = spec.and((root, query, cb) -> cb.equal(cb.lower(root.get("model")), model.toLowerCase()));
+        }
+        if (category != null && !category.isBlank()) {
+            spec = spec.and((root, query, cb) -> cb.equal(cb.lower(root.get("category")), category.toLowerCase()));
+        }
+        if (minPrice != null) {
+            spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("price"), minPrice));
+        }
+        if (maxPrice != null) {
+            spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("price"), maxPrice));
+        }
+
+        return spec;
     }
 
     private Vehicle mapToEntity(CreateVehicleRequest request) {
