@@ -18,20 +18,22 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleResponse createVehicle(CreateVehicleRequest request) {
-        // Map request DTO to entity
-        Vehicle vehicle = Vehicle.builder()
+        // Map request DTO to entity and save
+        Vehicle vehicle = mapToEntity(request);
+        Vehicle savedVehicle = vehicleRepository.save(vehicle);
+
+        // Map saved entity back to response DTO
+        return mapToResponse(savedVehicle);
+    }
+
+    private Vehicle mapToEntity(CreateVehicleRequest request) {
+        return Vehicle.builder()
                 .make(request.make())
                 .model(request.model())
                 .category(request.category())
                 .price(request.price())
                 .quantity(request.quantity())
                 .build();
-
-        // Save to database
-        Vehicle savedVehicle = vehicleRepository.save(vehicle);
-
-        // Map saved entity back to response DTO
-        return mapToResponse(savedVehicle);
     }
 
     /**
