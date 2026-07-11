@@ -4,6 +4,7 @@ import com.kishan.backend.vehicle.dto.CreateVehicleRequest;
 import com.kishan.backend.vehicle.dto.VehicleResponse;
 import com.kishan.backend.vehicle.entity.Vehicle;
 import com.kishan.backend.vehicle.repository.VehicleRepository;
+import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,17 @@ public class VehicleServiceImpl implements VehicleService {
         return vehicleRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    @Override
+    public java.util.List<VehicleResponse> searchVehicles(
+            String make,
+            String model,
+            String category,
+            BigDecimal minPrice,
+            BigDecimal maxPrice
+    ) {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     private Vehicle mapToEntity(CreateVehicleRequest request) {

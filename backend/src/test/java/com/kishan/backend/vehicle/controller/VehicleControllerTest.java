@@ -133,4 +133,30 @@ class VehicleControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    void searchVehicles_ShouldReturn200OkAndMatchingVehicles_WhenParamsAreValid() throws Exception {
+        VehicleResponse response = new VehicleResponse(1L, "Toyota", "Camry", "Sedan", new BigDecimal("35000.00"), 5);
+
+        when(vehicleService.searchVehicles("Toyota", null, null, new BigDecimal("30000.00"), null))
+                .thenReturn(List.of(response));
+
+        mockMvc.perform(get("/api/vehicles/search")
+                .param("make", "Toyota")
+                .param("minPrice", "30000.00")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].make").value("Toyota"))
+                .andExpect(jsonPath("$[0].model").value("Camry"));
+    }
+
+    @Test
+    void searchVehicles_ShouldReturn401Unauthorized_WhenUserIsUnauthenticated() throws Exception {
+        mockMvc.perform(get("/api/vehicles/search")
+                .param("make", "Toyota")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
 }

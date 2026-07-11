@@ -97,4 +97,29 @@ class VehicleServiceImplTest {
         assertEquals("Toyota", responses.get(0).make());
         assertEquals("Honda", responses.get(1).make());
     }
+
+    @Test
+    void searchVehicles_ShouldReturnFilteredVehicles() {
+        // Arrange
+        Vehicle vehicle1 = Vehicle.builder()
+                .id(1L)
+                .make("Toyota")
+                .model("Camry")
+                .category("Sedan")
+                .price(new BigDecimal("35000.00"))
+                .quantity(5)
+                .build();
+
+        when(vehicleRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class)))
+                .thenReturn(java.util.List.of(vehicle1));
+
+        // Act
+        java.util.List<VehicleResponse> responses = vehicleService.searchVehicles("Toyota", null, null, new BigDecimal("30000.00"), null);
+
+        // Assert
+        assertNotNull(responses);
+        assertEquals(1, responses.size());
+        assertEquals("Toyota", responses.get(0).make());
+        assertEquals("Camry", responses.get(0).model());
+    }
 }

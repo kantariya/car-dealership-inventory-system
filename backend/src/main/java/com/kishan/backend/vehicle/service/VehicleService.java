@@ -2,6 +2,7 @@ package com.kishan.backend.vehicle.service;
 
 import com.kishan.backend.vehicle.dto.CreateVehicleRequest;
 import com.kishan.backend.vehicle.dto.VehicleResponse;
+import java.math.BigDecimal;
 
 /**
  * Service interface for vehicle business logic.
@@ -22,4 +23,22 @@ public interface VehicleService {
      * @return list of vehicle response DTOs
      */
     java.util.List<VehicleResponse> getAllVehicles();
+
+    /**
+     * Searches for vehicles matching any combination of the provided criteria.
+     *
+     * @param make     the vehicle make (optional)
+     * @param model    the vehicle model (optional)
+     * @param category the vehicle category (optional)
+     * @param minPrice the minimum vehicle price (optional)
+     * @param maxPrice the maximum vehicle price (optional)
+     * @return list of matching vehicle response DTOs
+     */
+    java.util.List<VehicleResponse> searchVehicles(
+            String make,
+            String model,
+            String category,
+            BigDecimal minPrice,
+            BigDecimal maxPrice
+    );
 }
