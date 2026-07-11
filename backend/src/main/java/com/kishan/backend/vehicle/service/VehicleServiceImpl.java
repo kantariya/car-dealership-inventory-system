@@ -71,8 +71,23 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    @Transactional
     public VehicleResponse purchaseVehicle(Long id) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"));
+
+        validateInStock(vehicle);
+
+        vehicle.setQuantity(vehicle.getQuantity() - 1);
+        Vehicle savedVehicle = vehicleRepository.save(vehicle);
+
+        return mapToResponse(savedVehicle);
+    }
+
+    private void validateInStock(Vehicle vehicle) {
+        if (vehicle.getQuantity() <= 0) {
+            throw new com.kishan.backend.vehicle.exception.OutOfStockException("Vehicle is out of stock");
+        }
     }
 
     private void updateVehicleFields(Vehicle vehicle, com.kishan.backend.vehicle.dto.UpdateVehicleRequest request) {
