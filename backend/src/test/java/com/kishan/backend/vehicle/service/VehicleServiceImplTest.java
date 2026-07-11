@@ -216,4 +216,76 @@ class VehicleServiceImplTest {
 
         verify(vehicleRepository).findById(999L);
     }
+
+    @Test
+    void purchaseVehicle_ShouldDecreaseQuantity_WhenVehicleInStock() {
+        // Arrange
+        Vehicle existingVehicle = Vehicle.builder()
+                .id(1L)
+                .make("Toyota")
+                .model("Camry")
+                .category("Sedan")
+                .price(new BigDecimal("35000.00"))
+                .quantity(5)
+                .build();
+
+        Vehicle updatedVehicle = Vehicle.builder()
+                .id(1L)
+                .make("Toyota")
+                .model("Camry")
+                .category("Sedan")
+                .price(new BigDecimal("35000.00"))
+                .quantity(4)
+                .build();
+
+        when(vehicleRepository.findById(1L)).thenReturn(java.util.Optional.of(existingVehicle));
+        when(vehicleRepository.save(any(Vehicle.class))).thenReturn(updatedVehicle);
+
+        // Act
+        VehicleResponse response = vehicleService.purchaseVehicle(1L);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(4, response.quantity());
+
+        verify(vehicleRepository).findById(1L);
+        verify(vehicleRepository).save(existingVehicle);
+    }
+
+    @Test
+    void purchaseVehicle_ShouldThrowOutOfStockException_WhenVehicleQuantityIsZero() {
+        // Arrange
+        Vehicle existingVehicle = Vehicle.builder()
+                .id(1L)
+                .make("Toyota")
+                .model("Camry")
+                .category("Sedan")
+                .price(new BigDecimal("35000.00"))
+                .quantity(0)
+                .build();
+
+        when(vehicleRepository.findById(1L)).thenReturn(java.util.Optional.of(existingVehicle));
+
+        // Act & Assert
+        org.junit.jupiter.api.Assertions.assertThrows(
+                com.kishan.backend.vehicle.exception.OutOfStockException.class,
+                () -> vehicleService.purchaseVehicle(1L)
+        );
+
+        verify(vehicleRepository).findById(1L);
+    }
+
+    @Test
+    void purchaseVehicle_ShouldThrowResourceNotFoundException_WhenVehicleDoesNotExist() {
+        // Arrange
+        when(vehicleRepository.findById(999L)).thenReturn(java.util.Optional.empty());
+
+        // Act & Assert
+        org.junit.jupiter.api.Assertions.assertThrows(
+                com.kishan.backend.common.exception.ResourceNotFoundException.class,
+                () -> vehicleService.purchaseVehicle(999L)
+        );
+
+        verify(vehicleRepository).findById(999L);
+    }
 }

@@ -70,6 +70,11 @@ public class VehicleServiceImpl implements VehicleService {
         vehicleRepository.delete(vehicle);
     }
 
+    @Override
+    public VehicleResponse purchaseVehicle(Long id) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
     private void updateVehicleFields(Vehicle vehicle, com.kishan.backend.vehicle.dto.UpdateVehicleRequest request) {
         vehicle.setMake(request.make());
         vehicle.setModel(request.model());

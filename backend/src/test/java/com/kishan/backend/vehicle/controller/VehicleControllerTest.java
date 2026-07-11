@@ -280,4 +280,51 @@ class VehicleControllerTest {
                 .with(csrf()))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    void purchaseVehicle_ShouldReturn200Ok_WhenVehicleExistsAndInStock() throws Exception {
+        VehicleResponse response = new VehicleResponse(1L, "Toyota", "Camry", "Sedan", new BigDecimal("35000.00"), 4);
+
+        when(vehicleService.purchaseVehicle(1L)).thenReturn(response);
+
+        mockMvc.perform(post("/api/vehicles/1/purchase")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.quantity").value(4));
+    }
+
+    @Test
+    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    void purchaseVehicle_ShouldReturn400BadRequest_WhenOutOfStock() throws Exception {
+        when(vehicleService.purchaseVehicle(1L))
+                .thenThrow(new com.kishan.backend.vehicle.exception.OutOfStockException("Vehicle is out of stock"));
+
+        mockMvc.perform(post("/api/vehicles/1/purchase")
+                .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("Vehicle is out of stock"));
+    }
+
+    @Test
+    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    void purchaseVehicle_ShouldReturn404NotFound_WhenVehicleDoesNotExist() throws Exception {
+        when(vehicleService.purchaseVehicle(999L))
+                .thenThrow(new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"));
+
+        mockMvc.perform(post("/api/vehicles/999/purchase")
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").value("Vehicle not found"));
+    }
+
+    @Test
+    void purchaseVehicle_ShouldReturn401Unauthorized_WhenUserIsUnauthenticated() throws Exception {
+        mockMvc.perform(post("/api/vehicles/1/purchase")
+                .with(csrf()))
+                .andExpect(status().isUnauthorized());
+    }
 }

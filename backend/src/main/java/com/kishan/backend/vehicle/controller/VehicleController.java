@@ -88,4 +88,15 @@ public class VehicleController {
     public void deleteVehicle(@PathVariable Long id) {
         vehicleService.deleteVehicle(id);
     }
+
+    /**
+     * Endpoint to purchase a vehicle, decreasing its stock by one.
+     *
+     * @param id the ID of the vehicle to purchase
+     * @return the updated vehicle details DTO
+     */
+    @PostMapping("/{id}/purchase")
+    public VehicleResponse purchaseVehicle(@PathVariable Long id) {
+        return vehicleService.purchaseVehicle(id);
+    }
 }

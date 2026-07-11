@@ -57,4 +57,12 @@ public interface VehicleService {
      * @param id the unique ID of the vehicle to delete
      */
     void deleteVehicle(Long id);
+
+    /**
+     * Purchases a vehicle, decreasing its quantity by one.
+     *
+     * @param id the unique ID of the vehicle to purchase
+     * @return the updated vehicle details DTO
+     */
+    VehicleResponse purchaseVehicle(Long id);
 }
