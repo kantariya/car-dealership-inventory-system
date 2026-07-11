@@ -1,6 +1,7 @@
 package com.kishan.backend.vehicle.controller;
 
 import com.kishan.backend.vehicle.dto.CreateVehicleRequest;
+import com.kishan.backend.vehicle.dto.UpdateVehicleRequest;
 import com.kishan.backend.vehicle.dto.VehicleResponse;
 import com.kishan.backend.vehicle.service.VehicleService;
 import jakarta.validation.Valid;
@@ -60,5 +61,20 @@ public class VehicleController {
             @RequestParam(required = false) BigDecimal maxPrice
     ) {
         return vehicleService.searchVehicles(make, model, category, minPrice, maxPrice);
+    }
+
+    /**
+     * Endpoint to update an existing vehicle's details.
+     *
+     * @param id      the ID of the vehicle to update
+     * @param request the updated vehicle details
+     * @return the updated vehicle response details
+     */
+    @PutMapping("/{id}")
+    public VehicleResponse updateVehicle(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateVehicleRequest request
+    ) {
+        return vehicleService.updateVehicle(id, request);
     }
 }

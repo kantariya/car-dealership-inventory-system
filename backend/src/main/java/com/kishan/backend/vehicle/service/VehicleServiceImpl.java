@@ -49,6 +49,11 @@ public class VehicleServiceImpl implements VehicleService {
                 .toList();
     }
 
+    @Override
+    public VehicleResponse updateVehicle(Long id, com.kishan.backend.vehicle.dto.UpdateVehicleRequest request) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
     private org.springframework.data.jpa.domain.Specification<Vehicle> buildSearchSpecification(
             String make, String model, String category, BigDecimal minPrice, BigDecimal maxPrice
     ) {

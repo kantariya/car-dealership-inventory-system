@@ -41,4 +41,13 @@ public interface VehicleService {
             BigDecimal minPrice,
             BigDecimal maxPrice
     );
+
+    /**
+     * Updates an existing vehicle's details.
+     *
+     * @param id      the unique ID of the vehicle to update
+     * @param request the updated vehicle details
+     * @return the updated vehicle details DTO
+     */
+    VehicleResponse updateVehicle(Long id, com.kishan.backend.vehicle.dto.UpdateVehicleRequest request);
 }

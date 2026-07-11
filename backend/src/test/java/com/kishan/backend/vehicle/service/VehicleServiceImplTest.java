@@ -122,4 +122,62 @@ class VehicleServiceImplTest {
         assertEquals("Toyota", responses.get(0).make());
         assertEquals("Camry", responses.get(0).model());
     }
+
+    @Test
+    void updateVehicle_ShouldUpdateAndReturnVehicle_WhenVehicleExists() {
+        // Arrange
+        com.kishan.backend.vehicle.dto.UpdateVehicleRequest request =
+                new com.kishan.backend.vehicle.dto.UpdateVehicleRequest("Toyota", "Camry Hybrid", "Sedan", new BigDecimal("38000.00"), 4);
+
+        Vehicle existingVehicle = Vehicle.builder()
+                .id(1L)
+                .make("Toyota")
+                .model("Camry")
+                .category("Sedan")
+                .price(new BigDecimal("35000.00"))
+                .quantity(5)
+                .build();
+
+        Vehicle updatedVehicle = Vehicle.builder()
+                .id(1L)
+                .make("Toyota")
+                .model("Camry Hybrid")
+                .category("Sedan")
+                .price(new BigDecimal("38000.00"))
+                .quantity(4)
+                .build();
+
+        when(vehicleRepository.findById(1L)).thenReturn(java.util.Optional.of(existingVehicle));
+        when(vehicleRepository.save(any(Vehicle.class))).thenReturn(updatedVehicle);
+
+        // Act
+        VehicleResponse response = vehicleService.updateVehicle(1L, request);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(1L, response.id());
+        assertEquals("Camry Hybrid", response.model());
+        assertEquals(new BigDecimal("38000.00"), response.price());
+        assertEquals(4, response.quantity());
+
+        verify(vehicleRepository).findById(1L);
+        verify(vehicleRepository).save(any(Vehicle.class));
+    }
+
+    @Test
+    void updateVehicle_ShouldThrowResourceNotFoundException_WhenVehicleDoesNotExist() {
+        // Arrange
+        com.kishan.backend.vehicle.dto.UpdateVehicleRequest request =
+                new com.kishan.backend.vehicle.dto.UpdateVehicleRequest("Toyota", "Camry Hybrid", "Sedan", new BigDecimal("38000.00"), 4);
+
+        when(vehicleRepository.findById(999L)).thenReturn(java.util.Optional.empty());
+
+        // Act & Assert
+        org.junit.jupiter.api.Assertions.assertThrows(
+                com.kishan.backend.common.exception.ResourceNotFoundException.class,
+                () -> vehicleService.updateVehicle(999L, request)
+        );
+
+        verify(vehicleRepository).findById(999L);
+    }
 }

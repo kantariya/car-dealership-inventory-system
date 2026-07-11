@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kishan.backend.common.exception.GlobalExceptionHandler;
 import com.kishan.backend.security.JwtService;
 import com.kishan.backend.vehicle.dto.CreateVehicleRequest;
+import com.kishan.backend.vehicle.dto.UpdateVehicleRequest;
 import com.kishan.backend.vehicle.dto.VehicleResponse;
 import com.kishan.backend.vehicle.service.VehicleService;
 import com.kishan.backend.security.SecurityConfig;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -158,5 +160,87 @@ class VehicleControllerTest {
                 .param("make", "Toyota")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "admin@example.com", roles = {"ADMIN"})
+    void updateVehicle_ShouldReturn200Ok_WhenUserIsAdminAndVehicleExists() throws Exception {
+        UpdateVehicleRequest request = new UpdateVehicleRequest("Toyota", "Camry Hybrid", "Sedan", new BigDecimal("38000.00"), 4);
+        VehicleResponse response = new VehicleResponse(1L, "Toyota", "Camry Hybrid", "Sedan", new BigDecimal("38000.00"), 4);
+
+        when(vehicleService.updateVehicle(any(Long.class), any(UpdateVehicleRequest.class))).thenReturn(response);
+
+        mockMvc.perform(put("/api/vehicles/1")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.model").value("Camry Hybrid"))
+                .andExpect(jsonPath("$.quantity").value(4));
+    }
+
+    @Test
+    @WithMockUser(username = "admin@example.com", roles = {"ADMIN"})
+    void updateVehicle_ShouldReturn404NotFound_WhenVehicleDoesNotExist() throws Exception {
+        UpdateVehicleRequest request = new UpdateVehicleRequest("Toyota", "Camry Hybrid", "Sedan", new BigDecimal("38000.00"), 4);
+
+        when(vehicleService.updateVehicle(any(Long.class), any(UpdateVehicleRequest.class)))
+                .thenThrow(new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"));
+
+        mockMvc.perform(put("/api/vehicles/999")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").value("Vehicle not found"));
+    }
+
+    @Test
+    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    void updateVehicle_ShouldReturn403Forbidden_WhenUserIsNotAdmin() throws Exception {
+        UpdateVehicleRequest request = new UpdateVehicleRequest("Toyota", "Camry Hybrid", "Sedan", new BigDecimal("38000.00"), 4);
+
+        mockMvc.perform(put("/api/vehicles/1")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void updateVehicle_ShouldReturn401Unauthorized_WhenUserIsUnauthenticated() throws Exception {
+        UpdateVehicleRequest request = new UpdateVehicleRequest("Toyota", "Camry Hybrid", "Sedan", new BigDecimal("38000.00"), 4);
+
+        mockMvc.perform(put("/api/vehicles/1")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "admin@example.com", roles = {"ADMIN"})
+    void updateVehicle_ShouldReturn400BadRequest_WhenValidationFails() throws Exception {
+        UpdateVehicleRequest invalidRequest = new UpdateVehicleRequest("", "", "", new BigDecimal("-1.00"), -5);
+
+        mockMvc.perform(put("/api/vehicles/1")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("Validation failed"))
+                .andExpect(jsonPath("$.errors.make").value("Make cannot be blank"))
+                .andExpect(jsonPath("$.errors.model").value("Model cannot be blank"))
+                .andExpect(jsonPath("$.errors.category").value("Category cannot be blank"))
+                .andExpect(jsonPath("$.errors.price").value("Price cannot be negative"))
+                .andExpect(jsonPath("$.errors.quantity").value("Quantity cannot be negative"));
     }
 }
