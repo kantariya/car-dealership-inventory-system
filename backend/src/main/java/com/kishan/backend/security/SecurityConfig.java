@@ -31,6 +31,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 // Allow public access to specific test-only endpoints used in other global exception tests
                 .requestMatchers("/test/validation", "/test/generic-exception", "/test/not-found-exception").permitAll()
+                // Restrict vehicle creation to ADMIN role
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/vehicles").hasRole("ADMIN")
                 // All other endpoints require authentication
                 .anyRequest().authenticated()
             )
