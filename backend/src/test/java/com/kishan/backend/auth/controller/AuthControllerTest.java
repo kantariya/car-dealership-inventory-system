@@ -1,6 +1,8 @@
 package com.kishan.backend.auth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kishan.backend.auth.dto.LoginRequest;
+import com.kishan.backend.auth.dto.LoginResponse;
 import com.kishan.backend.auth.dto.RegisterRequest;
 import com.kishan.backend.auth.dto.RegisterResponse;
 import com.kishan.backend.auth.exception.EmailAlreadyExistsException;
@@ -13,6 +15,7 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -89,5 +92,54 @@ class AuthControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.message").value("Email address already in use: jane.doe@example.com"));
+    }
+
+    @Test
+    void login_ShouldReturn200Ok_WhenRequestIsValid() throws Exception {
+        LoginRequest request = new LoginRequest("jane.doe@example.com", "secure123");
+        LoginResponse response = new LoginResponse("stub-jwt-token", "jane.doe@example.com", "Jane Doe", "USER");
+
+        when(authService.login(any(LoginRequest.class))).thenReturn(response);
+
+        mockMvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").value("stub-jwt-token"))
+                .andExpect(jsonPath("$.email").value("jane.doe@example.com"))
+                .andExpect(jsonPath("$.name").value("Jane Doe"))
+                .andExpect(jsonPath("$.role").value("USER"));
+    }
+
+    @Test
+    void login_ShouldReturn400BadRequest_WhenValidationFails() throws Exception {
+        LoginRequest invalidRequest = new LoginRequest("invalid-email", ""); // Invalid email format, blank password
+
+        mockMvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("Validation failed"))
+                .andExpect(jsonPath("$.errors.email").value("Email must be a valid email address"))
+                .andExpect(jsonPath("$.errors.password").value("Password cannot be blank"));
+    }
+
+    @Test
+    void login_ShouldReturn401Unauthorized_WhenCredentialsAreInvalid() throws Exception {
+        LoginRequest request = new LoginRequest("jane.doe@example.com", "wrongPassword");
+
+        when(authService.login(any(LoginRequest.class)))
+                .thenThrow(new BadCredentialsException("Invalid email or password"));
+
+        mockMvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.status").value(401))
+                .andExpect(jsonPath("$.message").value("Invalid email or password"));
     }
 }

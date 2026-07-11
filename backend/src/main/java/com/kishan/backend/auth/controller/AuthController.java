@@ -1,5 +1,7 @@
 package com.kishan.backend.auth.controller;
 
+import com.kishan.backend.auth.dto.LoginRequest;
+import com.kishan.backend.auth.dto.LoginResponse;
 import com.kishan.backend.auth.dto.RegisterRequest;
 import com.kishan.backend.auth.dto.RegisterResponse;
 import com.kishan.backend.auth.service.AuthService;
@@ -29,5 +31,17 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
+    }
+
+    /**
+     * Endpoint to authenticate a user and generate a JWT token.
+     * Maps to HTTP POST /api/auth/login.
+     *
+     * @param request the validated login request body
+     * @return the response entity containing token and user details, and HTTP 200 status
+     */
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 }

@@ -1,5 +1,7 @@
 package com.kishan.backend.auth.service;
 
+import com.kishan.backend.auth.dto.LoginRequest;
+import com.kishan.backend.auth.dto.LoginResponse;
 import com.kishan.backend.auth.dto.RegisterRequest;
 import com.kishan.backend.auth.dto.RegisterResponse;
 import com.kishan.backend.auth.entity.Role;
@@ -45,6 +47,17 @@ public class AuthServiceImpl implements AuthService {
         // Persist to database
         User savedUser = userRepository.save(user);
         return mapToResponse(savedUser);
+    }
+
+    /**
+     * Authenticates a user with email and password and returns a login response.
+     *
+     * @param request the login request details
+     * @return the login response containing the token and user details
+     */
+    @Override
+    public LoginResponse login(LoginRequest request) {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**

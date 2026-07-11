@@ -1,5 +1,7 @@
 package com.kishan.backend.auth.service;
 
+import com.kishan.backend.auth.dto.LoginRequest;
+import com.kishan.backend.auth.dto.LoginResponse;
 import com.kishan.backend.auth.dto.RegisterRequest;
 import com.kishan.backend.auth.dto.RegisterResponse;
 
@@ -17,4 +19,12 @@ public interface AuthService {
      * @throws com.kishan.backend.auth.exception.EmailAlreadyExistsException if email is already taken
      */
     RegisterResponse register(RegisterRequest request);
+
+    /**
+     * Authenticates a user with email and password and returns a login response.
+     *
+     * @param request the login request details
+     * @return the login response containing the token and user details
+     */
+    LoginResponse login(LoginRequest request);
 }

@@ -1,5 +1,7 @@
 package com.kishan.backend.auth.service;
 
+import com.kishan.backend.auth.dto.LoginRequest;
+import com.kishan.backend.auth.dto.LoginResponse;
 import com.kishan.backend.auth.dto.RegisterRequest;
 import com.kishan.backend.auth.dto.RegisterResponse;
 import com.kishan.backend.auth.entity.Role;
@@ -14,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -90,5 +93,64 @@ class AuthServiceImplTest {
         
         assertEquals("Email address already in use: john.doe@example.com", exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void login_ShouldReturnToken_WhenCredentialsAreValid() {
+        // Arrange
+        LoginRequest loginRequest = new LoginRequest("john.doe@example.com", "securePassword123");
+        User user = User.builder()
+                .id(1L)
+                .email("john.doe@example.com")
+                .password(passwordEncoder.encode("securePassword123"))
+                .name("John Doe")
+                .role(Role.USER)
+                .build();
+        
+        when(userRepository.findByEmail(loginRequest.email())).thenReturn(java.util.Optional.of(user));
+
+        // Act
+        LoginResponse response = authService.login(loginRequest);
+
+        // Assert
+        assertNotNull(response);
+        assertNotNull(response.token());
+        assertEquals("john.doe@example.com", response.email());
+        assertEquals("John Doe", response.name());
+        assertEquals("USER", response.role());
+    }
+
+    @Test
+    void login_ShouldThrowException_WhenUserDoesNotExist() {
+        // Arrange
+        LoginRequest loginRequest = new LoginRequest("nonexistent@example.com", "anyPassword");
+        when(userRepository.findByEmail(loginRequest.email())).thenReturn(java.util.Optional.empty());
+
+        // Act & Assert
+        assertThrows(
+                BadCredentialsException.class,
+                () -> authService.login(loginRequest)
+        );
+    }
+
+    @Test
+    void login_ShouldThrowException_WhenPasswordIsIncorrect() {
+        // Arrange
+        LoginRequest loginRequest = new LoginRequest("john.doe@example.com", "wrongPassword");
+        User user = User.builder()
+                .id(1L)
+                .email("john.doe@example.com")
+                .password(passwordEncoder.encode("securePassword123"))
+                .name("John Doe")
+                .role(Role.USER)
+                .build();
+
+        when(userRepository.findByEmail(loginRequest.email())).thenReturn(java.util.Optional.of(user));
+
+        // Act & Assert
+        assertThrows(
+                BadCredentialsException.class,
+                () -> authService.login(loginRequest)
+        );
     }
 }
