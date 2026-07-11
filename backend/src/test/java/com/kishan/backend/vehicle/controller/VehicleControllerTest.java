@@ -5,6 +5,7 @@ import com.kishan.backend.common.exception.GlobalExceptionHandler;
 import com.kishan.backend.security.JwtService;
 import com.kishan.backend.vehicle.dto.CreateVehicleRequest;
 import com.kishan.backend.vehicle.dto.UpdateVehicleRequest;
+import com.kishan.backend.vehicle.dto.RestockVehicleRequest;
 import com.kishan.backend.vehicle.dto.VehicleResponse;
 import com.kishan.backend.vehicle.service.VehicleService;
 import com.kishan.backend.security.SecurityConfig;
@@ -325,6 +326,83 @@ class VehicleControllerTest {
     void purchaseVehicle_ShouldReturn401Unauthorized_WhenUserIsUnauthenticated() throws Exception {
         mockMvc.perform(post("/api/vehicles/1/purchase")
                 .with(csrf()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "admin@example.com", roles = {"ADMIN"})
+    void restockVehicle_ShouldReturn200Ok_WhenUserIsAdminAndRequestIsValid() throws Exception {
+        RestockVehicleRequest request = new RestockVehicleRequest(5);
+        VehicleResponse response = new VehicleResponse(1L, "Toyota", "Camry", "Sedan", new BigDecimal("35000.00"), 10);
+
+        when(vehicleService.restockVehicle(any(Long.class), any(RestockVehicleRequest.class))).thenReturn(response);
+
+        mockMvc.perform(post("/api/vehicles/1/restock")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.quantity").value(10));
+    }
+
+    @Test
+    @WithMockUser(username = "admin@example.com", roles = {"ADMIN"})
+    void restockVehicle_ShouldReturn400BadRequest_WhenValidationFails() throws Exception {
+        RestockVehicleRequest invalidRequest = new RestockVehicleRequest(0);
+
+        mockMvc.perform(post("/api/vehicles/1/restock")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("Validation failed"))
+                .andExpect(jsonPath("$.errors.quantity").value("Restock quantity must be greater than zero"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin@example.com", roles = {"ADMIN"})
+    void restockVehicle_ShouldReturn404NotFound_WhenVehicleDoesNotExist() throws Exception {
+        RestockVehicleRequest request = new RestockVehicleRequest(5);
+
+        when(vehicleService.restockVehicle(any(Long.class), any(RestockVehicleRequest.class)))
+                .thenThrow(new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"));
+
+        mockMvc.perform(post("/api/vehicles/999/restock")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").value("Vehicle not found"));
+    }
+
+    @Test
+    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    void restockVehicle_ShouldReturn403Forbidden_WhenUserIsNotAdmin() throws Exception {
+        RestockVehicleRequest request = new RestockVehicleRequest(5);
+
+        mockMvc.perform(post("/api/vehicles/1/restock")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void restockVehicle_ShouldReturn401Unauthorized_WhenUserIsUnauthenticated() throws Exception {
+        RestockVehicleRequest request = new RestockVehicleRequest(5);
+
+        mockMvc.perform(post("/api/vehicles/1/restock")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 }

@@ -288,4 +288,67 @@ class VehicleServiceImplTest {
 
         verify(vehicleRepository).findById(999L);
     }
+
+    @Test
+    void restockVehicle_ShouldIncreaseQuantity_WhenVehicleExistsAndQuantityIsPositive() {
+        // Arrange
+        com.kishan.backend.vehicle.dto.RestockVehicleRequest request = new com.kishan.backend.vehicle.dto.RestockVehicleRequest(5);
+        Vehicle existingVehicle = Vehicle.builder()
+                .id(1L)
+                .make("Toyota")
+                .model("Camry")
+                .category("Sedan")
+                .price(new BigDecimal("35000.00"))
+                .quantity(5)
+                .build();
+
+        Vehicle updatedVehicle = Vehicle.builder()
+                .id(1L)
+                .make("Toyota")
+                .model("Camry")
+                .category("Sedan")
+                .price(new BigDecimal("35000.00"))
+                .quantity(10)
+                .build();
+
+        when(vehicleRepository.findById(1L)).thenReturn(java.util.Optional.of(existingVehicle));
+        when(vehicleRepository.save(any(Vehicle.class))).thenReturn(updatedVehicle);
+
+        // Act
+        VehicleResponse response = vehicleService.restockVehicle(1L, request);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(10, response.quantity());
+
+        verify(vehicleRepository).findById(1L);
+        verify(vehicleRepository).save(existingVehicle);
+    }
+
+    @Test
+    void restockVehicle_ShouldThrowResourceNotFoundException_WhenVehicleDoesNotExist() {
+        // Arrange
+        com.kishan.backend.vehicle.dto.RestockVehicleRequest request = new com.kishan.backend.vehicle.dto.RestockVehicleRequest(5);
+        when(vehicleRepository.findById(999L)).thenReturn(java.util.Optional.empty());
+
+        // Act & Assert
+        org.junit.jupiter.api.Assertions.assertThrows(
+                com.kishan.backend.common.exception.ResourceNotFoundException.class,
+                () -> vehicleService.restockVehicle(999L, request)
+        );
+
+        verify(vehicleRepository).findById(999L);
+    }
+
+    @Test
+    void restockVehicle_ShouldThrowIllegalArgumentException_WhenQuantityIsZeroOrNegative() {
+        // Arrange
+        com.kishan.backend.vehicle.dto.RestockVehicleRequest request = new com.kishan.backend.vehicle.dto.RestockVehicleRequest(0);
+
+        // Act & Assert
+        org.junit.jupiter.api.Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> vehicleService.restockVehicle(1L, request)
+        );
+    }
 }
