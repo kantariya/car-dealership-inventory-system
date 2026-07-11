@@ -84,6 +84,22 @@ public class VehicleServiceImpl implements VehicleService {
         return mapToResponse(savedVehicle);
     }
 
+    @Override
+    @Transactional
+    public VehicleResponse restockVehicle(Long id, com.kishan.backend.vehicle.dto.RestockVehicleRequest request) {
+        if (request.quantity() == null || request.quantity() <= 0) {
+            throw new IllegalArgumentException("Restock quantity must be greater than zero");
+        }
+
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"));
+
+        vehicle.setQuantity(vehicle.getQuantity() + request.quantity());
+        Vehicle savedVehicle = vehicleRepository.save(vehicle);
+
+        return mapToResponse(savedVehicle);
+    }
+
     private void validateInStock(Vehicle vehicle) {
         if (vehicle.getQuantity() <= 0) {
             throw new com.kishan.backend.vehicle.exception.OutOfStockException("Vehicle is out of stock");

@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .requestMatchers("/test/validation", "/test/generic-exception", "/test/not-found-exception").permitAll()
                 // Restrict vehicle modification to ADMIN role
                 .requestMatchers(HttpMethod.POST, "/api/vehicles").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/vehicles/*/restock").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/vehicles/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/vehicles/**").hasRole("ADMIN")
                 // All other endpoints require authentication
