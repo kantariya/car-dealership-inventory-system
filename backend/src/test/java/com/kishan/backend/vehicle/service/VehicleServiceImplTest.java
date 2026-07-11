@@ -180,4 +180,40 @@ class VehicleServiceImplTest {
 
         verify(vehicleRepository).findById(999L);
     }
+
+    @Test
+    void deleteVehicle_ShouldDelete_WhenVehicleExists() {
+        // Arrange
+        Vehicle existingVehicle = Vehicle.builder()
+                .id(1L)
+                .make("Toyota")
+                .model("Camry")
+                .category("Sedan")
+                .price(new BigDecimal("35000.00"))
+                .quantity(5)
+                .build();
+
+        when(vehicleRepository.findById(1L)).thenReturn(java.util.Optional.of(existingVehicle));
+
+        // Act
+        vehicleService.deleteVehicle(1L);
+
+        // Assert
+        verify(vehicleRepository).findById(1L);
+        verify(vehicleRepository).delete(existingVehicle);
+    }
+
+    @Test
+    void deleteVehicle_ShouldThrowResourceNotFoundException_WhenVehicleDoesNotExist() {
+        // Arrange
+        when(vehicleRepository.findById(999L)).thenReturn(java.util.Optional.empty());
+
+        // Act & Assert
+        org.junit.jupiter.api.Assertions.assertThrows(
+                com.kishan.backend.common.exception.ResourceNotFoundException.class,
+                () -> vehicleService.deleteVehicle(999L)
+        );
+
+        verify(vehicleRepository).findById(999L);
+    }
 }

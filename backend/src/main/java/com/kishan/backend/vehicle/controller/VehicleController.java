@@ -77,4 +77,15 @@ public class VehicleController {
     ) {
         return vehicleService.updateVehicle(id, request);
     }
+
+    /**
+     * Endpoint to delete a vehicle from the inventory.
+     *
+     * @param id the ID of the vehicle to delete
+     */
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteVehicle(@PathVariable Long id) {
+        vehicleService.deleteVehicle(id);
+    }
 }

@@ -50,4 +50,11 @@ public interface VehicleService {
      * @return the updated vehicle details DTO
      */
     VehicleResponse updateVehicle(Long id, com.kishan.backend.vehicle.dto.UpdateVehicleRequest request);
+
+    /**
+     * Deletes an existing vehicle from the system.
+     *
+     * @param id the unique ID of the vehicle to delete
+     */
+    void deleteVehicle(Long id);
 }

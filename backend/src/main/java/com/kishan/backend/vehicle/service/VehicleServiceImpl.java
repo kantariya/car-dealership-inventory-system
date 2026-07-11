@@ -62,6 +62,11 @@ public class VehicleServiceImpl implements VehicleService {
         return mapToResponse(updatedVehicle);
     }
 
+    @Override
+    public void deleteVehicle(Long id) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
     private void updateVehicleFields(Vehicle vehicle, com.kishan.backend.vehicle.dto.UpdateVehicleRequest request) {
         vehicle.setMake(request.make());
         vehicle.setModel(request.model());

@@ -26,6 +26,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -242,5 +243,41 @@ class VehicleControllerTest {
                 .andExpect(jsonPath("$.errors.category").value("Category cannot be blank"))
                 .andExpect(jsonPath("$.errors.price").value("Price cannot be negative"))
                 .andExpect(jsonPath("$.errors.quantity").value("Quantity cannot be negative"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin@example.com", roles = {"ADMIN"})
+    void deleteVehicle_ShouldReturn204NoContent_WhenUserIsAdminAndVehicleExists() throws Exception {
+        mockMvc.perform(delete("/api/vehicles/1")
+                .with(csrf()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithMockUser(username = "admin@example.com", roles = {"ADMIN"})
+    void deleteVehicle_ShouldReturn404NotFound_WhenVehicleDoesNotExist() throws Exception {
+        org.mockito.Mockito.doThrow(new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"))
+                .when(vehicleService).deleteVehicle(999L);
+
+        mockMvc.perform(delete("/api/vehicles/999")
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").value("Vehicle not found"));
+    }
+
+    @Test
+    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    void deleteVehicle_ShouldReturn403Forbidden_WhenUserIsNotAdmin() throws Exception {
+        mockMvc.perform(delete("/api/vehicles/1")
+                .with(csrf()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void deleteVehicle_ShouldReturn401Unauthorized_WhenUserIsUnauthenticated() throws Exception {
+        mockMvc.perform(delete("/api/vehicles/1")
+                .with(csrf()))
+                .andExpect(status().isUnauthorized());
     }
 }
