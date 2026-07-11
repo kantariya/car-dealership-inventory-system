@@ -26,6 +26,11 @@ public class VehicleServiceImpl implements VehicleService {
         return mapToResponse(savedVehicle);
     }
 
+    @Override
+    public java.util.List<VehicleResponse> getAllVehicles() {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
     private Vehicle mapToEntity(CreateVehicleRequest request) {
         return Vehicle.builder()
                 .make(request.make())

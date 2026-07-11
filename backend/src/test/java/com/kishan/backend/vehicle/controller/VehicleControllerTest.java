@@ -17,11 +17,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -106,5 +108,29 @@ class VehicleControllerTest {
                 .andExpect(jsonPath("$.errors.category").value("Category cannot be blank"))
                 .andExpect(jsonPath("$.errors.price").value("Price cannot be negative"))
                 .andExpect(jsonPath("$.errors.quantity").value("Quantity cannot be negative"));
+    }
+
+    @Test
+    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    void getAllVehicles_ShouldReturn200Ok_WhenUserIsAuthenticated() throws Exception {
+        VehicleResponse response1 = new VehicleResponse(1L, "Toyota", "Camry", "Sedan", new BigDecimal("35000.00"), 5);
+        VehicleResponse response2 = new VehicleResponse(2L, "Honda", "Accord", "Sedan", new BigDecimal("32000.00"), 3);
+
+        when(vehicleService.getAllVehicles()).thenReturn(List.of(response1, response2));
+
+        mockMvc.perform(get("/api/vehicles")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].make").value("Toyota"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].make").value("Honda"));
+    }
+
+    @Test
+    void getAllVehicles_ShouldReturn401Unauthorized_WhenUserIsUnauthenticated() throws Exception {
+        mockMvc.perform(get("/api/vehicles")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 }

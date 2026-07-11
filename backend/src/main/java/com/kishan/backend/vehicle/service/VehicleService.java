@@ -15,4 +15,11 @@ public interface VehicleService {
      * @return the created vehicle details DTO
      */
     VehicleResponse createVehicle(CreateVehicleRequest request);
+
+    /**
+     * Retrieves all available vehicles.
+     *
+     * @return list of vehicle response DTOs
+     */
+    java.util.List<VehicleResponse> getAllVehicles();
 }

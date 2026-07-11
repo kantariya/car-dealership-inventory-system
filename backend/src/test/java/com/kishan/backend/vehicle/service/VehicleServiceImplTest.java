@@ -65,4 +65,36 @@ class VehicleServiceImplTest {
         assertEquals(new BigDecimal("89990.00"), capturedVehicle.getPrice());
         assertEquals(3, capturedVehicle.getQuantity());
     }
+
+    @Test
+    void getAllVehicles_ShouldReturnListOfVehicles() {
+        // Arrange
+        Vehicle vehicle1 = Vehicle.builder()
+                .id(1L)
+                .make("Toyota")
+                .model("Camry")
+                .category("Sedan")
+                .price(new BigDecimal("35000.00"))
+                .quantity(5)
+                .build();
+        Vehicle vehicle2 = Vehicle.builder()
+                .id(2L)
+                .make("Honda")
+                .model("Accord")
+                .category("Sedan")
+                .price(new BigDecimal("32000.00"))
+                .quantity(3)
+                .build();
+
+        when(vehicleRepository.findAll()).thenReturn(java.util.List.of(vehicle1, vehicle2));
+
+        // Act
+        java.util.List<VehicleResponse> responses = vehicleService.getAllVehicles();
+
+        // Assert
+        assertNotNull(responses);
+        assertEquals(2, responses.size());
+        assertEquals("Toyota", responses.get(0).make());
+        assertEquals("Honda", responses.get(1).make());
+    }
 }

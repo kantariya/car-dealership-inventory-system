@@ -29,4 +29,14 @@ public class VehicleController {
     public VehicleResponse createVehicle(@Valid @RequestBody CreateVehicleRequest request) {
         return vehicleService.createVehicle(request);
     }
+
+    /**
+     * Endpoint to view a list of all available vehicles.
+     *
+     * @return the list of available vehicles response DTOs
+     */
+    @GetMapping
+    public java.util.List<VehicleResponse> getAllVehicles() {
+        return vehicleService.getAllVehicles();
+    }
 }
