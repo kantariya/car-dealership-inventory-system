@@ -53,8 +53,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     @Transactional
     public VehicleResponse updateVehicle(Long id, com.kishan.backend.vehicle.dto.UpdateVehicleRequest request) {
-        Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"));
+        Vehicle vehicle = findVehicleById(id);
 
         updateVehicleFields(vehicle, request);
 
@@ -65,16 +64,14 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     @Transactional
     public void deleteVehicle(Long id) {
-        Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"));
+        Vehicle vehicle = findVehicleById(id);
         vehicleRepository.delete(vehicle);
     }
 
     @Override
     @Transactional
     public VehicleResponse purchaseVehicle(Long id) {
-        Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"));
+        Vehicle vehicle = findVehicleById(id);
 
         validateInStock(vehicle);
 
@@ -91,8 +88,7 @@ public class VehicleServiceImpl implements VehicleService {
             throw new IllegalArgumentException("Restock quantity must be greater than zero");
         }
 
-        Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"));
+        Vehicle vehicle = findVehicleById(id);
 
         vehicle.setQuantity(vehicle.getQuantity() + request.quantity());
         Vehicle savedVehicle = vehicleRepository.save(vehicle);
@@ -163,5 +159,10 @@ public class VehicleServiceImpl implements VehicleService {
                 vehicle.getPrice(),
                 vehicle.getQuantity()
         );
+    }
+
+    private Vehicle findVehicleById(Long id) {
+        return vehicleRepository.findById(id)
+                .orElseThrow(() -> new com.kishan.backend.common.exception.ResourceNotFoundException("Vehicle not found"));
     }
 }
