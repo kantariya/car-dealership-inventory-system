@@ -3,6 +3,10 @@ package com.kishan.backend.auth.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entity representing a User in the dealership inventory system database.
+ * Users are mapped to the "users" table.
+ */
 @Entity
 @Table(name = "users")
 @Getter

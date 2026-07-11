@@ -4,6 +4,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/**
+ * Data Transfer Object (DTO) for incoming user registration requests.
+ * Contains field validation rules for email, password, and name.
+ */
 public record RegisterRequest(
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Email must be a valid email address")
