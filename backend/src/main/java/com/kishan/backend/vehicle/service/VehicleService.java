@@ -65,4 +65,13 @@ public interface VehicleService {
      * @return the updated vehicle details DTO
      */
     VehicleResponse purchaseVehicle(Long id);
+
+    /**
+     * Restocks a vehicle, increasing its quantity by the supplied amount.
+     *
+     * @param id      the unique ID of the vehicle to restock
+     * @param request the restock details
+     * @return the updated vehicle details DTO
+     */
+    VehicleResponse restockVehicle(Long id, com.kishan.backend.vehicle.dto.RestockVehicleRequest request);
 }

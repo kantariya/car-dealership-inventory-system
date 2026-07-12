@@ -2,6 +2,7 @@ package com.kishan.backend.vehicle.controller;
 
 import com.kishan.backend.vehicle.dto.CreateVehicleRequest;
 import com.kishan.backend.vehicle.dto.UpdateVehicleRequest;
+import com.kishan.backend.vehicle.dto.RestockVehicleRequest;
 import com.kishan.backend.vehicle.dto.VehicleResponse;
 import com.kishan.backend.vehicle.service.VehicleService;
 import jakarta.validation.Valid;
@@ -98,5 +99,20 @@ public class VehicleController {
     @PostMapping("/{id}/purchase")
     public VehicleResponse purchaseVehicle(@PathVariable Long id) {
         return vehicleService.purchaseVehicle(id);
+    }
+
+    /**
+     * Endpoint to restock a vehicle, increasing its quantity by the supplied amount.
+     *
+     * @param id      the ID of the vehicle to restock
+     * @param request the restock details
+     * @return the updated vehicle details DTO
+     */
+    @PostMapping("/{id}/restock")
+    public VehicleResponse restockVehicle(
+            @PathVariable Long id,
+            @Valid @RequestBody RestockVehicleRequest request
+    ) {
+        return vehicleService.restockVehicle(id, request);
     }
 }
