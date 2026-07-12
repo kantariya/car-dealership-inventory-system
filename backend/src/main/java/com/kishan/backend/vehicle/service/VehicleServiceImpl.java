@@ -5,7 +5,10 @@ import com.kishan.backend.vehicle.dto.VehicleResponse;
 import com.kishan.backend.vehicle.entity.Vehicle;
 import com.kishan.backend.vehicle.repository.VehicleRepository;
 import java.math.BigDecimal;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,16 +39,17 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public java.util.List<VehicleResponse> searchVehicles(
-            String make,
-            String model,
+    public List<VehicleResponse> searchVehicles(
+            String query,
             String category,
             BigDecimal minPrice,
             BigDecimal maxPrice
     ) {
-        org.springframework.data.jpa.domain.Specification<Vehicle> spec = buildSearchSpecification(make, model, category, minPrice, maxPrice);
+        Specification<Vehicle> spec =
+                buildSearchSpecification(query, category, minPrice, maxPrice);
 
-        return vehicleRepository.findAll(spec).stream()
+        return vehicleRepository.findAll(spec)
+                .stream()
                 .map(this::mapToResponse)
                 .toList();
     }
@@ -110,25 +114,39 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setQuantity(request.quantity());
     }
 
-    private org.springframework.data.jpa.domain.Specification<Vehicle> buildSearchSpecification(
-            String make, String model, String category, BigDecimal minPrice, BigDecimal maxPrice
-    ) {
-        org.springframework.data.jpa.domain.Specification<Vehicle> spec = org.springframework.data.jpa.domain.Specification.where(null);
 
-        if (make != null && !make.isBlank()) {
-            spec = spec.and((root, query, cb) -> cb.equal(cb.lower(root.get("make")), make.toLowerCase()));
+    private org.springframework.data.jpa.domain.Specification<Vehicle> buildSearchSpecification(
+            String query,
+            String category,
+            BigDecimal minPrice,
+            BigDecimal maxPrice
+    ) {
+
+        Specification<Vehicle> spec = (root, q, cb) -> cb.conjunction();
+
+        if (query != null && !query.isBlank()) {
+            String search = "%" + query.toLowerCase() + "%";
+
+            spec = spec.and((root, q, cb) ->
+                    cb.or(
+                            cb.like(cb.lower(root.get("make")), search),
+                            cb.like(cb.lower(root.get("model")), search)
+                    ));
         }
-        if (model != null && !model.isBlank()) {
-            spec = spec.and((root, query, cb) -> cb.equal(cb.lower(root.get("model")), model.toLowerCase()));
-        }
+
         if (category != null && !category.isBlank()) {
-            spec = spec.and((root, query, cb) -> cb.equal(cb.lower(root.get("category")), category.toLowerCase()));
+            spec = spec.and((root, q, cb) ->
+                    cb.equal(cb.lower(root.get("category")), category.toLowerCase()));
         }
+
         if (minPrice != null) {
-            spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("price"), minPrice));
+            spec = spec.and((root, q, cb) ->
+                    cb.greaterThanOrEqualTo(root.get("price"), minPrice));
         }
+
         if (maxPrice != null) {
-            spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("price"), maxPrice));
+            spec = spec.and((root, q, cb) ->
+                    cb.lessThanOrEqualTo(root.get("price"), maxPrice));
         }
 
         return spec;

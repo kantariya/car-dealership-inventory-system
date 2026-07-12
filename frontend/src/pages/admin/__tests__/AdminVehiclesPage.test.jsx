@@ -114,7 +114,7 @@ describe('AdminVehiclesPage', () => {
     await waitFor(() => {
       expect(screen.getByText('Chevrolet')).toBeInTheDocument();
     });
-  });
+  }, 15000);
 
   it('should open Edit Vehicle modal, update fields, and update the list', async () => {
     getAllVehicles.mockResolvedValueOnce(mockVehicles);

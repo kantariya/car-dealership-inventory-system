@@ -40,13 +40,13 @@ export default function VehiclesPage() {
     try {
       // Map single search input query to both make and model parameters for simplicity
       const params = {
-        make: searchQuery,
-        model: searchQuery,
+        query: searchQuery,
         category,
         minPrice,
         maxPrice,
       };
-      const data = await searchVehicles(params);
+
+const data = await searchVehicles(params);
       setVehicles(data || []);
     } catch (err) {
       setError(err.message || 'Failed to search vehicles');
@@ -70,8 +70,7 @@ export default function VehiclesPage() {
     setError(null);
     try {
       const data = await searchVehicles({
-        make: '',
-        model: '',
+        query: '',
         category: '',
         minPrice: '',
         maxPrice: '',

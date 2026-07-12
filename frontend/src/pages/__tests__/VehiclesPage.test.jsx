@@ -56,8 +56,7 @@ describe('VehiclesPage', () => {
 
     await waitFor(() => {
       expect(searchVehicles).toHaveBeenCalledWith({
-        make: '',
-        model: '',
+        query: '',
         category: '',
         minPrice: '',
         maxPrice: '',
@@ -86,8 +85,7 @@ describe('VehiclesPage', () => {
     await user.click(screen.getByRole('button', { name: /search/i }));
 
     expect(searchVehicles).toHaveBeenLastCalledWith({
-      make: 'Tesla',
-      model: 'Tesla', // both make and model mapped from the single search input for simple UI
+      query: 'Tesla',
       category: '',
       minPrice: '40000',
       maxPrice: '90000',
@@ -116,8 +114,7 @@ describe('VehiclesPage', () => {
 
     expect(searchInput).toHaveValue('');
     expect(searchVehicles).toHaveBeenLastCalledWith({
-      make: '',
-      model: '',
+      query: '',
       category: '',
       minPrice: '',
       maxPrice: '',

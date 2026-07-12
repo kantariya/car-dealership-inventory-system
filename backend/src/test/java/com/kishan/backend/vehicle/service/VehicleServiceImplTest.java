@@ -114,7 +114,7 @@ class VehicleServiceImplTest {
                 .thenReturn(java.util.List.of(vehicle1));
 
         // Act
-        java.util.List<VehicleResponse> responses = vehicleService.searchVehicles("Toyota", null, null, new BigDecimal("30000.00"), null);
+        java.util.List<VehicleResponse> responses = vehicleService.searchVehicles("Toyota", null, new BigDecimal("30000.00"), null);
 
         // Assert
         assertNotNull(responses);

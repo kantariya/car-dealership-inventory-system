@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * REST controller exposing endpoints for vehicle management.
@@ -44,24 +45,22 @@ public class VehicleController {
     }
 
     /**
-     * Endpoint to search for vehicles by make, model, category, or price range.
+     * Endpoint to search for vehicles by query (matching make or model), category, or price range.
      *
-     * @param make     the vehicle make
-     * @param model    the vehicle model
+     * @param query    the search query matching make or model
      * @param category the vehicle category
      * @param minPrice the minimum price
      * @param maxPrice the maximum price
      * @return list of matching vehicle response DTOs
      */
     @GetMapping("/search")
-    public java.util.List<VehicleResponse> searchVehicles(
-            @RequestParam(required = false) String make,
-            @RequestParam(required = false) String model,
+    public List<VehicleResponse> searchVehicles(
+            @RequestParam(required = false) String query,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice
     ) {
-        return vehicleService.searchVehicles(make, model, category, minPrice, maxPrice);
+        return vehicleService.searchVehicles(query, category, minPrice, maxPrice);
     }
 
     /**

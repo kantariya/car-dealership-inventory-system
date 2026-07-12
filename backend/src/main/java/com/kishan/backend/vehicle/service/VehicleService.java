@@ -27,16 +27,14 @@ public interface VehicleService {
     /**
      * Searches for vehicles matching any combination of the provided criteria.
      *
-     * @param make     the vehicle make (optional)
-     * @param model    the vehicle model (optional)
+     * @param query    the search query matching make or model (optional)
      * @param category the vehicle category (optional)
      * @param minPrice the minimum vehicle price (optional)
      * @param maxPrice the maximum vehicle price (optional)
      * @return list of matching vehicle response DTOs
      */
     java.util.List<VehicleResponse> searchVehicles(
-            String make,
-            String model,
+            String query,
             String category,
             BigDecimal minPrice,
             BigDecimal maxPrice

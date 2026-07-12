@@ -143,11 +143,11 @@ class VehicleControllerTest {
     void searchVehicles_ShouldReturn200OkAndMatchingVehicles_WhenParamsAreValid() throws Exception {
         VehicleResponse response = new VehicleResponse(1L, "Toyota", "Camry", "Sedan", new BigDecimal("35000.00"), 5);
 
-        when(vehicleService.searchVehicles("Toyota", null, null, new BigDecimal("30000.00"), null))
+        when(vehicleService.searchVehicles("Toyota", null, new BigDecimal("30000.00"), null))
                 .thenReturn(List.of(response));
 
         mockMvc.perform(get("/api/vehicles/search")
-                .param("make", "Toyota")
+                .param("query", "Toyota")
                 .param("minPrice", "30000.00")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -159,7 +159,7 @@ class VehicleControllerTest {
     @Test
     void searchVehicles_ShouldReturn401Unauthorized_WhenUserIsUnauthenticated() throws Exception {
         mockMvc.perform(get("/api/vehicles/search")
-                .param("make", "Toyota")
+                .param("query", "Toyota")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
