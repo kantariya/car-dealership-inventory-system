@@ -22,32 +22,32 @@
         </feMerge>
       </filter>
     </defs>
-    
+
     <!-- Background Frame -->
     <rect width="100%" height="100%" rx="16" fill="#0B0D17"/>
-    
+
     <!-- Decorative Tech-grid Lines -->
     <line x1="0" y1="180" x2="800" y2="180" stroke="rgba(248, 250, 252, 0.05)" stroke-width="2"/>
     <path d="M50 20 L750 20 C770 20, 780 30, 780 50 L780 150 C780 170, 770 180, 750 180 L50 180 C30 180, 20 170, 20 150 L20 50 C20 30, 30 20, 50 20 Z" fill="none" stroke="url(#bluePurple)" stroke-dasharray="1000" stroke-dashoffset="0" stroke-width="1.5">
       <animate attributeName="stroke-dashoffset" values="1000;0" dur="3s" repeatCount="1" fill="freeze"/>
     </path>
-    
+
     <!-- Rotating Glow Ring -->
     <circle cx="120" cy="100" r="45" fill="none" stroke="url(#bluePurple)" stroke-width="3" filter="url(#glow)">
       <animateTransform attributeName="transform" type="rotate" from="0 120 100" to="360 120 100" dur="10s" repeatCount="indefinite"/>
     </circle>
-    
+
     <!-- Sleek Car Silhouette -->
     <path d="M95 105 C95 100 102 95 110 93 L122 83 C125 80 128 80 132 83 L142 93 C145 94 148 97 148 100 L150 106 C150 108 147 110 144 110 L96 110 C93 110 90 108 90 106 Z" fill="url(#bluePurple)"/>
     <circle cx="108" cy="112" r="6" fill="#0B0D17" stroke="#3B82F6" stroke-width="2"/>
     <circle cx="138" cy="112" r="6" fill="#0B0D17" stroke="#8B5CF6" stroke-width="2"/>
-    
+
     <!-- Title Text with neon pulse -->
     <text x="200" y="95" font-family="'Outfit', 'Inter', sans-serif" font-weight="900" font-size="42" fill="url(#neonGlow)" filter="url(#glow)" letter-spacing="3">
       LUXEDRIVE
       <animate attributeName="opacity" values="0.9;1;0.9" dur="2s" repeatCount="indefinite"/>
     </text>
-    
+
     <!-- Styled Subtitle -->
     <text x="202" y="130" font-family="'Inter', sans-serif" font-weight="500" font-size="16" fill="rgba(248, 250, 252, 0.6)" letter-spacing="1">
       Premium Car Dealership &amp; Inventory Management System
@@ -55,21 +55,28 @@
   </svg>
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" alt="Build Passing"/>
+  <img src="https://img.shields.io/badge/backend%20tests-62%2F62-brightgreen?style=flat-square" alt="Backend Tests"/>
+  <img src="https://img.shields.io/badge/frontend%20tests-47%2F47-brightgreen?style=flat-square" alt="Frontend Tests"/>
+  <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License"/>
+</p>
+
 ---
 
 ## 🌟 Project Overview
 
-**LuxeDrive** is a state-of-the-art, full-stack Car Dealership Inventory System. Built on modern development workflows, the application delivers a premium user experience combining a robust backend architecture with a highly-polished, media-integrated single-page application (SPA).
+**LuxeDrive** is a full-stack car dealership inventory system built with a test-driven development workflow. It pairs a Spring Boot / PostgreSQL backend with a polished, media-rich React single-page application (SPA).
 
-Featuring an dark luxury aesthetic, the system supports role-based access (Standard User and Admin), dynamic vehicle cataloging, inventory adjustment actions (purchasing and restocking), multi-parameter search/filters, and full-screen ambient video backgrounds with low-volume background audio for maximum sensory immersion.
+The app features a dark luxury aesthetic, role-based access (Standard User and Admin), dynamic vehicle cataloging, inventory adjustment actions (purchasing and restocking), multi-parameter search and filtering, and a full-screen ambient video background with low-volume audio for an immersive showroom feel.
 
 ### Key Features
-* 🔒 **Role-Based Token Authentication**: Secure token-based registration & login featuring password validation and automatic route guards.
-* 🚗 **Dynamic Showroom**: Responsive card layout displaying real-time stock levels, pricing, category badges, and quick actions.
-* 🔍 **Advanced Search Specification**: Multi-criteria search capabilities on the backend (make, model, category, minimum/maximum price) integrated with a responsive slide-out filters panel on the frontend.
-* 🛒 **Purchase Flow**: Real-time validation preventing purchase of out-of-stock items, immediately updating inventory quantities.
-* 🛠️ **Admin Operations Hub**: Administrative dashboard allowing full CRUD operations (add, edit, update, delete) and instant stock replenishment.
-* 🎵 **Ambient Media Integration**: Custom React wrappers for looping background video and subtle low-volume soundtrack control for custom luxury branding.
+* 🔒 **Role-Based Token Authentication** — Secure token-based registration and login with password validation and automatic route guards.
+* 🚗 **Dynamic Showroom** — Responsive card layout displaying real-time stock levels, pricing, category badges, and quick actions.
+* 🔍 **Advanced Search** — Multi-criteria search on the backend (make, model, category, min/max price) paired with a responsive slide-out filters panel on the frontend.
+* 🛒 **Purchase Flow** — Real-time validation preventing purchase of out-of-stock items, with immediate inventory updates.
+* 🛠️ **Admin Operations Hub** — Full CRUD (add, edit, update, delete) plus one-click stock replenishment.
+* 🎵 **Ambient Media Integration** — Custom React components for looping background video and subtle, low-volume soundtrack playback.
 
 ---
 
@@ -82,10 +89,10 @@ Featuring an dark luxury aesthetic, the system supports role-based access (Stand
       <br/><br/>
       <b>Backend Services</b>
       <hr/>
-      <ul>
+      <ul align="left">
         <li>Java 17 &amp; Spring Boot Web</li>
-        <li>Spring Security &amp; JWT</li>
-        <li>Spring Data JPA</li>
+        <li>Spring Security &amp; JWT (JJWT 0.12)</li>
+        <li>Spring Data JPA &amp; Specifications</li>
         <li>PostgreSQL Database (Neon)</li>
         <li>Flyway Database Migrations</li>
         <li>JUnit 5 &amp; Mockito Testing</li>
@@ -96,7 +103,7 @@ Featuring an dark luxury aesthetic, the system supports role-based access (Stand
       <br/><br/>
       <b>Frontend Client</b>
       <hr/>
-      <ul>
+      <ul align="left">
         <li>React 19 &amp; Vite 8</li>
         <li>Material UI (MUI) v9</li>
         <li>Framer Motion Animations</li>
@@ -112,7 +119,7 @@ Featuring an dark luxury aesthetic, the system supports role-based access (Stand
 
 ## 🏗️ System Architecture
 
-The project is structured around a decoupled, feature-based package design for clean separation of concerns and maintainability.
+The project uses a decoupled, feature-based package design for clean separation of concerns and maintainability.
 
 ```mermaid
 graph TD
@@ -137,7 +144,7 @@ graph TD
         Repository --> Postgres[(PostgreSQL Database)]
         Flyway[Flyway Migrations] -. Schema Migrations .-> Postgres
     end
-    
+
     AxiosClient ====>|JSON over HTTP| JwtFilter
 ```
 
@@ -146,15 +153,15 @@ graph TD
 ## ⚙️ Local Setup & Installation
 
 ### Prerequisites
-* **Java Development Kit (JDK) 17** installed and configured in your path.
-* **Node.js** (v18.x or above) & **npm** installed.
-* **PostgreSQL Database** instance (local or hosted e.g. Neon DB).
+* **Java Development Kit (JDK) 17**, installed and configured in your PATH.
+* **Node.js** (v18.x or above) & **npm**.
+* **PostgreSQL** instance (local or hosted, e.g. Neon).
 
 ---
 
 ### 1. Environment Configuration
 
-Create a `.env` file in the project root containing your database credentials and JWT security properties:
+Create a `.env` file in the project root with your database credentials and JWT security properties:
 
 ```env
 # Database Configuration
@@ -162,7 +169,7 @@ DB_URL=jdbc:postgresql://your_database_host:5432/dealership_db
 DB_USERNAME=your_database_username
 DB_PASSWORD=your_database_password
 
-# Security Configuration (Minimum 256-bit secret)
+# Security Configuration (minimum 256-bit secret)
 JWT_SECRET=your_super_secret_base64_encoded_key_containing_32_bytes_or_more
 
 # Frontend Configuration
@@ -171,7 +178,7 @@ FRONTEND_URL=http://localhost:5173
 ```
 
 > [!WARNING]
-> Never commit your actual `.env` file to version control. The repository contains a placeholder `.env.example` file for template reference.
+> Never commit your actual `.env` file to version control. The repository includes a placeholder `.env.example` for reference.
 
 ---
 
@@ -190,11 +197,11 @@ FRONTEND_URL=http://localhost:5173
    ./mvnw spring-boot:run
    ```
 
-* The backend service will start on port `8080` (accessible at `http://localhost:8080`).
-* Flyway migrations will run automatically on startup to initialize database tables:
+* The backend service starts on port `8080` (`http://localhost:8080`).
+* Flyway migrations run automatically on startup to initialize database tables:
   * `V1__init.sql` (baseline)
-  * `V2__create_users_table.sql` (Creates users table with role support)
-  * `V3__create_vehicles_table.sql` (Creates vehicles inventory table)
+  * `V2__create_users_table.sql` (users table with role support)
+  * `V3__create_vehicles_table.sql` (vehicle inventory table)
 
 ---
 
@@ -209,7 +216,6 @@ FRONTEND_URL=http://localhost:5173
    npm install
    ```
 3. Set up the local environment file:
-   Copy `.env.example` to `.env` inside the `frontend` directory:
    ```bash
    cp .env.example .env
    ```
@@ -218,24 +224,24 @@ FRONTEND_URL=http://localhost:5173
    npm run dev
    ```
 
-* The frontend application will be hosted locally at `http://localhost:5173`.
-* You can access the dashboard, register standard or administrator accounts, and browse the inventory.
+* The frontend is hosted locally at `http://localhost:5173`.
+* Register a standard or administrator account and browse the inventory.
 
 ---
 
 ## 🧪 Test Suite & Coverage
 
-The project enforces strict **Test-Driven Development (TDD)** practices. Features are introduced through a rigorous Red-Green-Refactor development cycle.
+The project follows a strict **Test-Driven Development (TDD)** workflow — every feature was introduced through a Red → Green → Refactor cycle, with failing tests committed before implementation.
 
 ### Running Backend Tests
-Navigate to `/backend` and execute:
 ```bash
+cd backend
 ./mvnw test
 ```
 
 ### Running Frontend Tests
-Navigate to `/frontend` and execute:
 ```bash
+cd frontend
 npm run test:run
 ```
 
@@ -249,14 +255,14 @@ Backend (JUnit 5 & Mockito):
   ✔ Active Test Suites: 8
   ✔ Passing Test Assertions: 62 / 62
   ✔ Failed / Skipped Tests: 0
-  ✔ Components covered: AuthController, VehicleController, JwtService, 
+  ✔ Components covered: AuthController, VehicleController, JwtService,
                         SecurityConfig, GlobalExceptionHandler, Service Layers.
 
 Frontend (Vitest & Testing Library):
   ✔ Active Test Files: 11
   ✔ Passing Test Assertions: 47 / 47
   ✔ Failed / Skipped Tests: 0
-  ✔ Components covered: AppRouter, AuthContext, MainLayout, DashboardPage, 
+  ✔ Components covered: AppRouter, AuthContext, MainLayout, DashboardPage,
                         VehiclesPage, RegisterPage, LoginPage, AdminVehiclesPage,
                         BackgroundVideo, BackgroundAudio, ProtectedRoute.
 ================================================================================
@@ -325,9 +331,9 @@ Test Files  11 passed (11)
 
 ## 📷 Screenshots in Action
 
-*Placeholder section. Fill with your actual application screenshots after running locally.*
+*Placeholder section — replace with actual application screenshots after running locally.*
 
-| Showroom Dashboard | Vehicle Detail & Filter Drawer | Admin Control panel |
+| Showroom Dashboard | Vehicle Detail & Filter Drawer | Admin Control Panel |
 | :---: | :---: | :---: |
 | ![Dashboard Placeholder](https://via.placeholder.com/600x400/0B0D17/F8FAFC?text=LuxeDrive+Showroom) | ![Filters Placeholder](https://via.placeholder.com/600x400/0B0D17/F8FAFC?text=Dynamic+Search+Filters) | ![Admin Dashboard Placeholder](https://via.placeholder.com/600x400/0B0D17/F8FAFC?text=Admin+CRUD+and+Restock) |
 
@@ -335,7 +341,7 @@ Test Files  11 passed (11)
 
 ## 🌐 Live Deployment
 
-*Placeholder section. Fill with your deployment links.*
+*Placeholder section — replace with your deployment links.*
 
 * **Live Application URL**: [Visit LuxeDrive Web Client](https://example.com) (Deployed via Vercel)
 * **API Documentation Server**: [LuxeDrive API Host](https://example.com/api) (Deployed via Render / AWS)
@@ -344,17 +350,48 @@ Test Files  11 passed (11)
 
 ## 📝 My AI Usage
 
-### AI Tools Used
-* **Gemini 3.5 Flash** (via the Antigravity AI coding assistant framework) served as the primary pair-programming co-author.
+This project was built solo using an AI-assisted, strict TDD workflow. AI tools acted as a pair-programmer for nearly every commit (51 of 54 commits in the project history are AI co-authored), but every line was reviewed, run, and understood before being committed. Below is a full, honest breakdown of what was used and how.
 
-### How AI was Used
-* **TDD Loop Generation**: Assisted in drafting the initial failing test assertions for Spring Security rules, vehicle specification searches, and complex Material UI component triggers (like the admin restocking dialog modal).
-* **Architecture Drafting**: Helped structure the feature-based modular layout (`auth/`, `vehicle/`, `security/`, `common/`) to align with clean design practices.
-* **Component Design**: Streamlined the design of the premium Material UI 9 palette config, implementing custom glassmorphism styles (`rgba(19, 22, 41, 0.4)` background filters with blur) and Framer Motion hooks for transitions.
-* **Rebranding Workflow**: Generated code structure and configurations for ambient background media handlers (`BackgroundVideo` and `BackgroundAudio`), adjusting vitest mocks to mock HTMLMediaElement features appropriately.
+### AI Tools Used
+* **Antigravity** (Google's agentic AI coding assistant, powered by Gemini) — the primary pair-programming tool used throughout backend and frontend development, appearing as `Co-authored-by: Antigravity` across the vast majority of commits.
+* **Gemini 3.5 Flash** — used specifically for drafting this README (SVG header, architecture diagram, setup docs, and test report formatting).
+
+### How AI Was Used
+
+**1. Enforcing the Red → Green → Refactor TDD cycle**
+Almost every feature in this repo followed a 3-commit pattern, and AI assisted at each stage:
+* *RED* — AI helped draft the initial failing unit/integration tests (e.g. `AuthControllerTest`, `VehicleServiceImplTest`, `AppRouter` tests, `AdminVehiclesPage` CRUD tests) before any implementation existed.
+* *GREEN* — AI helped write the minimum implementation code needed to make those tests pass (e.g. `AuthServiceImpl` registration/login logic, JWT generation via `JwtService`, vehicle purchase/restock endpoints, `DashboardPage` and `VehiclesPage` components).
+* *REFACTOR* — AI assisted in cleaning up passing code, such as extracting helper methods (`findVehicleById`, `buildSearchSpecification`, `mapToResponse`, `validateInStock`) and simplifying Spring Security/JWT configuration.
+
+**2. Backend (Spring Boot) development**
+* Spring Security & JWT authentication filter setup, including stateless session policy and role-based endpoint protection.
+* Vehicle domain logic: creation, search (via JPA Specifications), update, deletion, purchase (with out-of-stock handling), and restocking, each backed by full unit and integration test coverage.
+* Global exception handling (`GlobalExceptionHandler`) mapping custom exceptions to correct HTTP status codes (400, 401, 403, 404).
+* PostgreSQL/Flyway configuration and environment-based Spring profiles (dev, prod, local).
+* CORS configuration for local frontend integration.
+
+**3. Frontend (React) development**
+* Project scaffolding: Vite config, dependency selection (MUI, Framer Motion, Axios, React Router), and the Axios instance with a JWT interceptor and 401 auto-redirect.
+* `AuthContext`/`AuthProvider`, `ProtectedRoute`, `LoginPage`, and `RegisterPage`, including form validation and error handling.
+* `DashboardPage`, `VehiclesPage` (search/filter panel), and `AdminVehiclesPage` (full CRUD + restock dialogs), plus the reusable `VehicleCard` component.
+* Fixing recurring test issues surfaced during development, such as EMFILE errors from shallow MUI icon imports (resolved with deep imports), React 19 `act()` warnings, and `useMediaQuery`/`ThemeProvider` test wrapping.
+
+**4. Rebranding & ambient media integration**
+* Built the `BackgroundVideo` and `BackgroundAudio` components (autoplay/loop/muted video background, low-volume audio triggered on first interaction), including their test suites and global Vitest mocks to avoid JSDOM memory issues.
+* Renamed the project from an earlier working name ("AutoVault") to **LuxeDrive** across pages, layouts, and tests, and applied the glassmorphism visual overhaul (backdrop-filter blur, translucent MUI overrides) to showcase the new background media.
+* Diagnosed and fixed flaky tests introduced by the media components — e.g. asserting on the `element.muted` DOM property instead of the attribute (since React binds `muted` as a property, not an attribute), and increasing timeouts on slower CI/VM test runs.
+
+**5. Documentation**
+* Gemini 3.5 Flash drafted this README: the animated SVG header/badges, the Mermaid architecture diagram, the setup instructions, and the formatted test coverage reports.
+
+### What I Did Myself
+* Reviewed, ran, and understood every AI-suggested change before committing it — no code was merged without being verified against the test suite.
+* Made all product and architecture decisions (feature scope, role-based access model, package structure, styling direction, rebrand to LuxeDrive).
+* Debugged failing/flaky tests and decided on the actual fixes to apply (AI proposed candidate fixes; I chose and validated the correct one in context).
+* Wrote and curated commit messages, and structured the overall TDD workflow that AI was directed to follow at each step.
 
 ### Reflection
-The collaboration with the AI assistant accelerated the workflow, particularly in maintaining strict compliance with the **Test-Driven Development (TDD)** lifecycle. When writing complex queries (such as building JPA dynamic specifications on the fly), the AI proposed type-safe Spring Data configurations that passed verification instantly. On the frontend, mocking browser behaviors (such as HTML5 audio playback restrictions) in vitest was completed smoothly, preventing unnecessary test setup delays. Overall, the AI acted as a valuable assistant, converting abstract design goals into verified, clean code implementations.
+Using AI as a consistent pair-programmer sped up the mechanical parts of TDD — scaffolding failing tests, wiring up boilerplate Spring Security config, and mocking browser media APIs in Vitest — while I stayed responsible for design decisions, debugging judgment calls, and final review. The most valuable use was in JPA Specification-based dynamic search queries and HTML5 media mocking, both of which are easy to get subtly wrong by hand. The biggest risk of leaning on AI this heavily is losing track of *why* a fix works; I mitigated that by keeping every change scoped to a single failing test and confirming the suite was green before moving on.
 
 ---
-*Co-authored-by: Gemini 3.5 <gemini@users.noreply.github.com>*

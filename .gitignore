@@ -60,8 +60,6 @@ frontend/node_modules/
 frontend/dist/
 frontend/.vite/
 frontend/coverage/
-frontend/src/assets/*.mp3
-frontend/src/assets/*.mp4
 
 # npm/yarn/pnpm logs
 frontend/npm-debug.log*

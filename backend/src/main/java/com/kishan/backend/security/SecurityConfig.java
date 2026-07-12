@@ -66,6 +66,7 @@ public class SecurityConfig {
         List<String> allowedOrigins = new ArrayList<>();
         allowedOrigins.add("http://localhost:5173"); // Vite React
         allowedOrigins.add("http://localhost:3000"); // Create React App
+        allowedOrigins.add("https://car-dealership-inventory-system-rho.vercel.app/");
         if (frontendUrl != null && !frontendUrl.isBlank()) {
             allowedOrigins.add(frontendUrl);
         }
