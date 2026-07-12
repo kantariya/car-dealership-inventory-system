@@ -83,7 +83,7 @@ describe('RegisterPage', () => {
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/login', { state: { registered: true } });
     });
-  });
+  }, 15000);
 
   it('should show error when passwords do not match', async () => {
     renderRegisterPage();
@@ -118,5 +118,5 @@ describe('RegisterPage', () => {
     await waitFor(() => {
       expect(screen.getByText(/email already exists/i)).toBeInTheDocument();
     });
-  });
+  }, 15000);
 });

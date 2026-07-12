@@ -17,7 +17,7 @@ describe('BackgroundVideo', () => {
     expect(videoEl.tagName).toBe('VIDEO');
     expect(videoEl).toHaveAttribute('autoplay');
     expect(videoEl).toHaveAttribute('loop');
-    expect(videoEl).toHaveAttribute('muted');
+    expect(videoEl.muted).toBe(true);
     expect(videoEl).toHaveAttribute('playsinline');
     expect(videoEl).toHaveAttribute('src');
   });
