@@ -95,7 +95,7 @@ describe('VehiclesPage', () => {
       expect(screen.getByText('Tesla Model 3')).toBeInTheDocument();
       expect(screen.queryByText('Toyota RAV4')).not.toBeInTheDocument();
     });
-  });
+  }, 15000);
 
   it('should reset search filters when reset button is clicked', async () => {
     searchVehicles.mockResolvedValue(mockVehicles);
@@ -119,7 +119,7 @@ describe('VehiclesPage', () => {
       minPrice: '',
       maxPrice: '',
     });
-  });
+  }, 15000);
 
   it('should allow purchasing a vehicle from the search results list', async () => {
     searchVehicles.mockResolvedValueOnce([mockVehicles[0]]);

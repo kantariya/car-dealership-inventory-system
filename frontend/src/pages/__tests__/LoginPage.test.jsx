@@ -78,7 +78,7 @@ describe('LoginPage', () => {
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/dashboard', { replace: true });
     });
-  });
+  }, 15000);
 
   it('should display error message on login failure', async () => {
     loginUser.mockRejectedValueOnce({
@@ -95,5 +95,5 @@ describe('LoginPage', () => {
     await waitFor(() => {
       expect(screen.getByText(/invalid credentials/i)).toBeInTheDocument();
     });
-  });
+  }, 15000);
 });

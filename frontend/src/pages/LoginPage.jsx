@@ -100,7 +100,7 @@ export default function LoginPage() {
               Welcome Back
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Sign in to your AutoVault account
+              Sign in to your LuxeDrive account
             </Typography>
           </Box>
 

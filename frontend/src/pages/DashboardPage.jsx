@@ -97,7 +97,8 @@ export default function DashboardPage() {
           overflow: 'hidden',
           mb: 6,
           p: { xs: 4, md: 8 },
-          background: 'linear-gradient(135deg, rgba(19, 22, 41, 0.95) 0%, rgba(11, 13, 23, 0.95) 100%)',
+          background: 'linear-gradient(135deg, rgba(19, 22, 41, 0.4) 0%, rgba(11, 13, 23, 0.4) 100%)',
+          backdropFilter: 'blur(6px)',
           border: '1px solid rgba(248, 250, 252, 0.06)',
           boxShadow: '0 20px 50px rgba(0, 0, 0, 0.3)',
         }}
@@ -112,7 +113,7 @@ export default function DashboardPage() {
             className="gradient-text"
             sx={{ fontWeight: 800, mb: 2, fontSize: { xs: '2.2rem', md: '3.5rem' } }}
           >
-            AutoVault Showroom
+           LuxeDrive Showroom
           </Typography>
           <Typography variant="h5" color="text.secondary" sx={{ maxWidth: 600, mb: 0, fontWeight: 400 }}>
             Discover and purchase premium quality vehicles. Engineered for excellence, curated for you.

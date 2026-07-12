@@ -73,7 +73,7 @@ export default function MainLayout({ children }) {
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', py: 3, gap: 1 }}>
         <CarIcon sx={{ color: 'primary.main', fontSize: 28 }} />
         <Typography variant="h5" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }} className="gradient-text">
-          AutoVault
+          LuxeDrive
         </Typography>
       </Box>
       <Divider sx={{ mb: 2 }} />
@@ -174,7 +174,7 @@ export default function MainLayout({ children }) {
                 }}
                 className="gradient-text"
               >
-                AutoVault
+                LuxeDrive
               </Typography>
             </Box>
 
@@ -231,9 +231,19 @@ export default function MainLayout({ children }) {
                   data-testid="profile-menu-button"
                   sx={{ p: 0.5, border: '1px solid rgba(248,250,252,0.1)' }}
                 >
-                  <Avatar sx={{ width: 36, height: 36, bgcolor: 'primary.dark' }}>
-                    {user.name ? user.name.charAt(0).toUpperCase() : <PersonIcon />}
-                  </Avatar>
+                  <Avatar
+  sx={{
+    width: 36,
+    height: 36,
+    bgcolor: "primary.dark",
+    display: "flex",
+    gap: 0.3,
+    fontSize: 14,
+  }}
+>
+  <PersonIcon sx={{ fontSize: 18 }} />
+  {user.name?.charAt(0).toUpperCase()}
+</Avatar>
                 </IconButton>
 
                 <Menu

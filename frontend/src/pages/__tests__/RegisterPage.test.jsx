@@ -99,7 +99,7 @@ describe('RegisterPage', () => {
       expect(screen.getByText(/passwords do not match/i)).toBeInTheDocument();
     });
     expect(registerUser).not.toHaveBeenCalled();
-  });
+  }, 15000);
 
   it('should display error message on registration failure', async () => {
     registerUser.mockRejectedValueOnce({

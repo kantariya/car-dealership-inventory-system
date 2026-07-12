@@ -89,7 +89,7 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          background: 'rgba(19, 22, 41, 0.8)',
+          background: 'rgba(19, 22, 41, 0.4)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(248, 250, 252, 0.06)',
           borderRadius: 16,
@@ -118,7 +118,7 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          background: 'rgba(11, 13, 23, 0.8)',
+          background: 'rgba(11, 13, 23, 0.4)',
           backdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(248, 250, 252, 0.06)',
           boxShadow: 'none',
@@ -148,7 +148,6 @@ const theme = createTheme({
         body: {
           backgroundColor: 'transparent',
           background: 'transparent',
-          backdropFilter: 'blur(6px)',
         },
       },
     },

@@ -45,7 +45,7 @@ describe('MainLayout', () => {
     mockUser = { name: 'John Doe', email: 'john@test.com', role: 'USER' };
     renderLayout();
 
-    expect(screen.getAllByText('AutoVault')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('LuxeDrive')[0]).toBeInTheDocument();
     expect(screen.getByText('Content Child')).toBeInTheDocument();
     expect(screen.getByText('John Doe')).toBeInTheDocument();
   });
