@@ -86,7 +86,7 @@ describe('AdminVehiclesPage', () => {
     await user.type(screen.getByLabelText(/model/i), 'Corvette');
     
     // Select category dropdown - wait for select to render and trigger click
-    const selectTrigger = screen.getByLabelText(/category/i);
+    const selectTrigger = screen.getByRole('combobox', { name: /category/i });
     await user.click(selectTrigger);
     
     // Pick Coupe category item
