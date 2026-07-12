@@ -2,8 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
 import { AuthProvider } from '../../context/AuthContext';
 import MainLayout from '../MainLayout';
+import theme from '../../theme';
 
 const mockLogout = vi.fn();
 let mockUser = null;
@@ -23,11 +25,13 @@ vi.mock('../../context/AuthContext', async () => {
 
 function renderLayout() {
   return render(
-    <MemoryRouter>
-      <MainLayout>
-        <div>Content Child</div>
-      </MainLayout>
-    </MemoryRouter>
+    <ThemeProvider theme={theme}>
+      <MemoryRouter>
+        <MainLayout>
+          <div>Content Child</div>
+        </MainLayout>
+      </MemoryRouter>
+    </ThemeProvider>
   );
 }
 
@@ -41,7 +45,7 @@ describe('MainLayout', () => {
     mockUser = { name: 'John Doe', email: 'john@test.com', role: 'USER' };
     renderLayout();
 
-    expect(screen.getByText('AutoVault')).toBeInTheDocument();
+    expect(screen.getAllByText('AutoVault')[0]).toBeInTheDocument();
     expect(screen.getByText('Content Child')).toBeInTheDocument();
     expect(screen.getByText('John Doe')).toBeInTheDocument();
   });
@@ -50,18 +54,20 @@ describe('MainLayout', () => {
     mockUser = { name: 'Regular User', email: 'user@test.com', role: 'USER' };
     const { rerender } = renderLayout();
 
-    expect(screen.queryByText(/admin panel/i)).not.toBeInTheDocument();
+    expect(screen.queryAllByRole('link', { name: /admin/i })).toHaveLength(0);
 
     mockUser = { name: 'Admin User', email: 'admin@test.com', role: 'ADMIN' };
     rerender(
-      <MemoryRouter>
-        <MainLayout>
-          <div>Content Child</div>
-        </MainLayout>
-      </MemoryRouter>
+      <ThemeProvider theme={theme}>
+        <MemoryRouter>
+          <MainLayout>
+            <div>Content Child</div>
+          </MainLayout>
+        </MemoryRouter>
+      </ThemeProvider>
     );
 
-    expect(screen.getByText(/admin/i)).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: /admin/i })[0]).toBeInTheDocument();
   });
 
   it('should call logout function when clicking logout button', async () => {
@@ -69,11 +75,16 @@ describe('MainLayout', () => {
     renderLayout();
     const user = userEvent.setup();
 
-    // In a responsive appBar/sidebar, there's a logout button
-    const logoutBtn = screen.getByRole('button', { name: /logout/i });
-    expect(logoutBtn).toBeInTheDocument();
+    // Click profile menu button first to open the menu
+    const profileBtn = screen.getByTestId('profile-menu-button');
+    expect(profileBtn).toBeInTheDocument();
+    await user.click(profileBtn);
 
-    await user.click(logoutBtn);
+    // Get logout menuitem from the open menu
+    const logoutMenuItem = screen.getByRole('menuitem', { name: /logout/i });
+    expect(logoutMenuItem).toBeInTheDocument();
+
+    await user.click(logoutMenuItem);
     expect(mockLogout).toHaveBeenCalledTimes(1);
   });
 });
