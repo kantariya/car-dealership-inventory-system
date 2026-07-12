@@ -14,8 +14,8 @@ const theme = createTheme({
       dark: '#7C3AED',
     },
     background: {
-      default: '#0B0D17',
-      paper: '#131629',
+      default: 'transparent',
+      paper: 'rgba(19, 22, 41, 0.8)',
     },
     text: {
       primary: '#F8FAFC',
@@ -135,10 +135,20 @@ const theme = createTheme({
     MuiDialog: {
       styleOverrides: {
         paper: {
-          background: '#131629',
+          background: 'rgba(19, 22, 41, 0.9)',
+          backdropFilter: 'blur(6px)',
           backgroundImage: 'none',
           borderRadius: 16,
           border: '1px solid rgba(248, 250, 252, 0.06)',
+        },
+      },
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundColor: 'transparent',
+          background: 'transparent',
+          backdropFilter: 'blur(6px)',
         },
       },
     },
