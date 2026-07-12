@@ -24,8 +24,8 @@ function AuthConsumer() {
       <span data-testid="user-role">{user?.role || ''}</span>
       <span data-testid="token">{token || ''}</span>
       <span data-testid="error">{error || ''}</span>
-      <button data-testid="login-btn" onClick={() => login({ email: 'test@test.com', password: 'password123' })}>Login</button>
-      <button data-testid="register-btn" onClick={() => register({ email: 'new@test.com', password: 'password123', name: 'New User' })}>Register</button>
+      <button data-testid="login-btn" onClick={() => login({ email: 'test@test.com', password: 'password123' }).catch(() => {})}>Login</button>
+      <button data-testid="register-btn" onClick={() => register({ email: 'new@test.com', password: 'password123', name: 'New User' }).catch(() => {})}>Register</button>
       <button data-testid="logout-btn" onClick={logout}>Logout</button>
     </div>
   );

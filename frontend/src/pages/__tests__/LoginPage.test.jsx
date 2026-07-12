@@ -43,7 +43,7 @@ describe('LoginPage', () => {
     renderLoginPage();
 
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
   });
 
@@ -65,7 +65,7 @@ describe('LoginPage', () => {
     const user = userEvent.setup();
 
     await user.type(screen.getByLabelText(/email/i), 'user@test.com');
-    await user.type(screen.getByLabelText(/password/i), 'password123');
+    await user.type(screen.getByLabelText(/^password$/i), 'password123');
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
     await waitFor(() => {
@@ -89,7 +89,7 @@ describe('LoginPage', () => {
     const user = userEvent.setup();
 
     await user.type(screen.getByLabelText(/email/i), 'wrong@test.com');
-    await user.type(screen.getByLabelText(/password/i), 'wrongpass');
+    await user.type(screen.getByLabelText(/^password$/i), 'wrongpass');
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
     await waitFor(() => {
