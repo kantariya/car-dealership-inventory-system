@@ -38,6 +38,10 @@ describe('VehiclesPage', () => {
     searchVehicles.mockResolvedValueOnce([]);
     renderVehiclesPage();
 
+    await waitFor(() => {
+      expect(searchVehicles).toHaveBeenCalled();
+    });
+
     expect(screen.getByLabelText(/search make or model/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/category/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/min price/i)).toBeInTheDocument();
@@ -96,7 +100,7 @@ describe('VehiclesPage', () => {
   });
 
   it('should reset search filters when reset button is clicked', async () => {
-    searchVehicles.mockResolvedValueOnce(mockVehicles);
+    searchVehicles.mockResolvedValue(mockVehicles);
     renderVehiclesPage();
     const user = userEvent.setup();
 
